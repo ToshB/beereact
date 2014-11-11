@@ -1,6 +1,6 @@
 'use strict';
 
-var UntappdAuth = function() {
+var UntappdAuth = function () {
   var clientId = 'F96DBE045AC0A7578D404A1052C754CFE50CA477';
   var authenticationUrlBase = 'https://untappd.com/oauth/authenticate/';
 

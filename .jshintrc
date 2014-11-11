@@ -17,8 +17,8 @@
 	"strict": true,
 	"trailing": true,
 	"smarttabs": true,
-	"predef": [
-		"require",
-		"module"
-	]
+	"globals": {
+		"require": true,
+		"module": true
+	}
 }

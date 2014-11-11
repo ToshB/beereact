@@ -14,6 +14,7 @@ var BeerApp = React.createClass({
   componentDidMount: function (){
     var that = this;
 
+
     tapData.getData()
     .then(function (taps){
         if(that.isMounted()){
@@ -21,7 +22,7 @@ var BeerApp = React.createClass({
             taps: taps
           });
         }
-      })
+      });
   },
 
   render: function () {

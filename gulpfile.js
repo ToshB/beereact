@@ -1,47 +1,45 @@
 'use strict';
-var gulp = require('gulp');
-var browserify = require('browserify');
-var del = require('del');
-var reactify = require('reactify');
-var source = require('vinyl-source-stream');
-var livereload = require('gulp-livereload');
+var gulp = require('gulp'),
+  browserify = require('browserify'),
+  del = require('del'),
+  reactify = require('reactify'),
+  source = require('vinyl-source-stream'),
+  server = require('gulp-express');
 
 var paths = {
-  css: ['src/css/*.css'],
-  js: ['src/js/**/*.js', 'src/js/**/*.jsx']
+  html: ['app/src/*.html'],
+  css: ['app/src/css/*.css'],
+  js: ['app/src/js/**/*.js', 'app/src/js/**/*.jsx']
 };
 
-gulp.task('clean', function (done) {
-  del(['build'], done);
-});
-
-gulp.task('css', ['clean'], function () {
-  return gulp.src(paths.css)
-    .pipe(gulp.dest('./src'));
-});
-
-gulp.task('js', ['clean'], function () {
+gulp.task('js', function () {
   return browserify({
-    entries: './src/js/app.jsx',
+    entries: './app/src/js/app.jsx',
     debug: true
   })
     .transform(reactify)
     .bundle()
-    .on('error', function(err){
+    .on('error', function (err) {
       console.log(err.message);
       //this.end();
     })
     .pipe(source('bundle.js'))
-    .pipe(gulp.dest('./src'));
+    .pipe(gulp.dest('./app/dist/js'));
 });
 
-gulp.task('watch', function () {
-  livereload.listen();
-  gulp.watch(paths.css, ['css']);
+gulp.task('server', function (){
+    server.run({
+      file: 'app/index.js'
+    });
+
+  //livereload.listen();
   gulp.watch(paths.js, ['js']);
-  gulp.watch('src/*').on('change', livereload.changed);
+  gulp.watch('app/dist/**/*').on('change', server.notify);
+  gulp.watch(paths.html).on('change', server.notify);
+  gulp.watch(paths.css).on('change', server.notify);
+  gulp.watch('app/index.js').on('change', server.run);
 });
 
-gulp.task('default', ['watch', 'css', 'js']);
+gulp.task('default', ['server', 'js']);
 
 
